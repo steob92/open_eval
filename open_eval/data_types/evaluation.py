@@ -22,4 +22,4 @@ class EvaluationSteps(ListLikeExtraction):
 class EvaluationScore(ScoreLike):
 
     def __str__(self):
-        return f"EvaluationScore(\n{{\n\t rationale={self.rationale}, \n\t score={self.score}\n}})"
+        return f"EvaluationScore(\n{{\n\t description={self.description}, \n\t value={self.value}\n}})"

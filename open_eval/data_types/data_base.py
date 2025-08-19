@@ -5,8 +5,8 @@ from typing import List, Dict, Any
 
 class ScoreLike(BaseModel):
 
-    rationale: str
-    score: float
+    description: str
+    value: float
 
     @classmethod
     def from_string(cls, json_str : str) -> "ScoreLike":

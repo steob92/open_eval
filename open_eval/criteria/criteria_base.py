@@ -1,15 +1,17 @@
 from pydantic import BaseModel, ValidationError
 from abc import ABC, abstractmethod
 from typing import List, Optional
-
+import json
 
 # local
-from open_eval.data_types import EvaluationSteps, EvaluationScore
+from open_eval.data_types import EvaluationSteps, EvaluationScore, Rubric
 from open_eval.models.model_base import ModelBase
 from open_eval.data_types.llm_test_case import LLMResponse
 from open_eval.prompt_templates import (
     eval_steps_template,
-    generic_criteria_template
+    generic_criteria_template,
+    rubric,
+    rubric_template
 )
 
 
@@ -28,10 +30,10 @@ class CriteriaResult:
 class CriteriaBase(ABC):
 
 
-    def __init__(self, criteria : str, criteria_desc : str, evaluation_steps: Optional[List[str]] = None):
+    def __init__(self, criteria : str, criteria_desc : str, evaluation_steps: Optional[List[str]] = None, rubric: Optional[Rubric] = None):
         self.criteria = criteria
         self.criteria_desc = criteria_desc
-        self.rubric = None
+        self.rubric = rubric
         if evaluation_steps :
             self._eval_steps = EvaluationSteps.new()
             self._eval_steps.evaluation_steps = evaluation_steps
@@ -61,6 +63,20 @@ class CriteriaBase(ABC):
             criteria_desc = self.criteria_desc,
         )
     
+
+    def format_rubric_prompt(self, rubric_range:Optional[str] = None):
+        """Format the evaluation generation prompt based on the criteria and description
+        
+        """
+
+        rubric_range = rubric_range or "1-5"
+        return rubric_template.format(
+            criteria = self.criteria, 
+            criteria_desc = self.criteria_desc,
+            rubric_min = rubric_range.split("-")[0].strip(),
+            rubric_max = rubric_range.split("-")[1].strip()
+        )
+
     def evaluate(
             self,
             model: ModelBase,
@@ -120,3 +136,26 @@ class CriteriaBase(ABC):
         response = model.generate(prompt)
         # print (response)
         return EvaluationSteps.from_json_str(response) 
+    
+
+    def generate_rubric(self, model: ModelBase, rubric_range : Optional[str]= "1-5") -> Rubric:
+        """Generate a rubric using the specified model.
+
+        Args:
+            model (ModelBase): The model to use for generating the rubric.
+
+        Returns:
+            Rubric: The generated rubric.
+        """
+        prompt = self.format_rubric_prompt(rubric_range=rubric_range)
+        print (f"Prompt for rubric generation: {prompt}")
+        response = model.generate(prompt)
+        print (f"Response from model: {response}")
+        data = json.loads(response.strip().replace("```json", "").replace("```", ""))
+        descr = [ datum.get('description') for datum in data]
+        value = [ float(datum.get('value')) for datum in data]
+        print (descr)
+        print (value)
+
+        data = {"descriptions" : descr, "values" : value}
+        return Rubric(**data)
