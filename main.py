@@ -58,9 +58,9 @@ def main():
 
 
     my_criteria.eval_steps = my_criteria.generate_evaluation_steps(model)
-    rubric = my_criteria.generate_rubric(model)
+    my_criteria.rubric = my_criteria.generate_rubric(model)
     print("Generated rubric:")
-    print (rubric)
+    print (my_criteria.rubric)
 
     # my_criteria_2 = CriteriaBase(
     #     criteria="Relevance", 
@@ -74,17 +74,18 @@ def main():
     # # print(my_criteria.eval_steps)
     # # print(f"my_eval_steps : {my_criteria.eval_steps}")
 
-    # # llm_test_case = [ LLMResponse(
-    # #     input="What is the capital of France?",
-    # #     output="The capital of France is Berlin.",
-    # #     context="There are multiple cities in France. Paris is the most well-known and is often considered the capital. Berlin is also a significant city in Europe."
-    # # ) for i in range(16) ]
+    llm_test_case = [ LLMResponse(
+        input="What is the capital of France?",
+        output="The capital of France is Berlin.",
+        context="There are multiple cities in France. Paris is the most well-known and is often considered the capital. Berlin is also a significant city in Europe."
+    ) for i in range(2) ]
 
-    # # my_evaluator = Evaluator([my_criteria, my_criteria_2])
 
-    # # scores = my_evaluator.evaluate(model = model, llm_response=llm_test_case)
-    # # print ("Evaluation scores:")
-    # # print(scores)
+    my_evaluator = Evaluator([my_criteria])
+
+    scores = my_evaluator.evaluate(model = model, llm_response=llm_test_case)
+    print ("Evaluation scores:")
+    print(scores)
     # # print (scores[0].evaluation_score.score)
     # # print (scores[0].evaluation_score.rationale)
 if __name__ == "__main__":

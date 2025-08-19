@@ -17,6 +17,7 @@ from open_eval.prompt_templates import (
 
 
 from dataclasses import dataclass
+import logging
 
 
 @dataclass
@@ -31,6 +32,9 @@ class CriteriaBase(ABC):
 
 
     def __init__(self, criteria : str, criteria_desc : str, evaluation_steps: Optional[List[str]] = None, rubric: Optional[Rubric] = None):
+        
+        self.logger = logging.getLogger(__name__)
+
         self.criteria = criteria
         self.criteria_desc = criteria_desc
         self.rubric = rubric
@@ -97,15 +101,16 @@ class CriteriaBase(ABC):
         if input:
             prompt = prompt.replace("{INPUT}", "input: ".upper() + input)
         if response:
-            prompt = prompt.replace("{RESPONSE}", "response: ".upper() + response)
+            prompt = prompt.replace("{RESPONSE}", "output: ".upper() + response)
         if context:
             prompt = prompt.replace("{CONTEXT}", "context: ".upper() + context)
 
-        if self.eval_steps:
-            eval_str = "\n- ".join(self.eval_steps.evaluation_steps)
-            prompt = prompt.replace("{EVALUATION_STEPS}", f"\nEvaluation Steps: {eval_str}")
+        # if self.eval_steps:
+        eval_str = "\nEvaluation Steps:" + "\n- ".join(self.eval_steps.evaluation_steps) if self.eval_steps else ""
+        prompt = prompt.replace("{EVALUATION_STEPS}", eval_str)
 
-        prompt = prompt.replace("{EVALUATION_RUBRIC}", self.rubric if self.rubric else "")
+        rubric = f"\nEvaluation Rubric: {self.rubric}" if self.rubric else ""
+        prompt = prompt.replace("{EVALUATION_RUBRIC}", rubric)
         # print(f"Prompt for evaluation: {prompt}")
         response = model.generate(prompt)
         # print (f"Response from model: {response}")
