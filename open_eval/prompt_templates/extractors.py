@@ -1,4 +1,4 @@
-extract_facts : str = """ <start of instructions>
+extract_facts : str = """<START OF INSTRUCTIONS>
 You are an expert fact extractor, whose role is to extract facts from a given text.
 You will be provided with a text, which is the content from which to extract facts.
 A fact is a statement that can be verified as true or false, with a clear and unambiguous meaning.
@@ -19,7 +19,7 @@ Extracted facts:
         "The Earth revolves around the Sun."
     ]
 }}
-<end of instruction>
+<END OF INSTRUCTIONS>
 Text: "{text}"
 Extracted facts:
 """

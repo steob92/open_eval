@@ -1,4 +1,4 @@
-eval_steps_template :str = """ <start of instructions>
+eval_steps_template :str = """ <START OF INSTRUCTIONS>
 You are an expert evaluator, whose role is to determine the steps to best evaluate a criteria.
 You will be provided with a criteria, which is the title of the criteria to evaluate on, and a description of that criteria (criteria description).
 You task is to carefully read the criteria and the criteria description and to determine steps on which to evaluate the criteria.
@@ -21,7 +21,7 @@ Evaluation steps:
 }}
 
 
-<end of instruction>
+<END OF INSTRUCTIONS>
 
 Criteria: {criteria}
 Criteria description: {criteria_desc}

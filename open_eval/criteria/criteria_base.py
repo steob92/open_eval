@@ -99,17 +99,17 @@ class CriteriaBase(ABC):
         #     prompt += f"\nEvaluation Steps: {eval_str}"
 
         if input:
-            prompt = prompt.replace("{INPUT}", "input: ".upper() + input)
+            prompt = prompt.replace("{INPUT}", "<start of input>\n".upper() + input + "\n<end of input>".upper())
         if response:
-            prompt = prompt.replace("{RESPONSE}", "output: ".upper() + response)
+            prompt = prompt.replace("{RESPONSE}", "<start of output>\n".upper() + response + "\n<end of output>".upper())
         if context:
-            prompt = prompt.replace("{CONTEXT}", "context: ".upper() + context)
+            prompt = prompt.replace("{CONTEXT}", "<start of context>\n".upper() + context + "\n<end of context>".upper())
 
         # if self.eval_steps:
-        eval_str = "\nEvaluation Steps:" + "\n- ".join(self.eval_steps.evaluation_steps) if self.eval_steps else ""
+        eval_str = "\n<start of evaluation Steps>\n".upper() + "\n- ".join(self.eval_steps.evaluation_steps) + "\n<end of evaluation Steps>\n".upper() if self.eval_steps else ""
         prompt = prompt.replace("{EVALUATION_STEPS}", eval_str)
 
-        rubric = f"\nEvaluation Rubric: {self.rubric}" if self.rubric else ""
+        rubric = "\n<start of evaluation Rubric>\n".upper() + self.rubric + "\n<end of evaluation Rubric>\n".upper() if self.rubric else ""
         prompt = prompt.replace("{EVALUATION_RUBRIC}", rubric)
         # print(f"Prompt for evaluation: {prompt}")
         response = model.generate(prompt)
@@ -153,14 +153,12 @@ class CriteriaBase(ABC):
             Rubric: The generated rubric.
         """
         prompt = self.format_rubric_prompt(rubric_range=rubric_range)
-        print (f"Prompt for rubric generation: {prompt}")
         response = model.generate(prompt)
-        print (f"Response from model: {response}")
         data = json.loads(response.strip().replace("```json", "").replace("```", ""))
         descr = [ datum.get('description') for datum in data]
         value = [ float(datum.get('value')) for datum in data]
-        print (descr)
-        print (value)
+        
+        
 
         data = {"descriptions" : descr, "values" : value}
         return Rubric(**data)

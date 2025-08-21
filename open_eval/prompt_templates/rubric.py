@@ -1,4 +1,4 @@
-rubric_template :str = """ <start of instructions>
+rubric_template :str = """<START OF INSTRUCTIONS>
 You are an expert evaluator, whose role is to determine the best rubric for evaluating a criteria.
 You will be provided with a criteria, which is the title of the criteria to evaluate on, and a description of that criteria (criteria description).
 You task is to carefully read the criteria and the criteria description and to determine the rubric on which to evaluate the criteria.
@@ -36,7 +36,8 @@ Rubric:
 ]
 
 
-<end of instruction>
+
+<END OF INSTRUCTIONS>
 
 Criteria: {criteria}
 Criteria description: {criteria_desc}
