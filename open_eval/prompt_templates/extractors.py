@@ -35,6 +35,7 @@ You should output your results in json format, with a list of the extracted asse
 Do not include any facts, interpretations, or subjective statements.
 Do not make up any assertions that are not present in the text.
 Consider the following example:
+
 Text: "The sky is blue. I believe that the sky is blue. The freezing point of water is 0 degrees Celsius. I think that the Earth revolves around the Sun."
 Extracted assertions:
 {{
@@ -45,5 +46,6 @@ Extracted assertions:
 }}
 <end of instruction>
 Text: "{text}"
+
 Extracted assertions:
 """

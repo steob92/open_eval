@@ -22,10 +22,10 @@ Description: {CRITERIA_DESCRIPTION}
 
 
 Based on the above, evaluate how well the response meets the criteria. Return your RATIONALE for the SCORE in JSON format, for example:
-{
+{{
     "rationale" : "One to two sentences detailing the rationale behind your score",
     "score" : "Your score here"
-}
+}}
 
 Your evaluation:
 """
