@@ -14,12 +14,13 @@ Description: {CRITERIA_DESCRIPTION}
 
 {EVALUATION_RUBRIC}
 
-{INPUT}
+INPUT: {INPUT}
 
-{RESPONSE}
+RESPONSE: {RESPONSE}
 
-{CONTEXT}
+CONTEXT: {CONTEXT}
 
+EXPECTED RESPONSE: {EXPECTED_RESPONSE}
 
 Based on the above, evaluate how well the response meets the criteria. Return your RATIONALE for the SCORE in JSON format, for example:
 {{
